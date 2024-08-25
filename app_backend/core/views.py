@@ -99,6 +99,7 @@ class SimilarProducts(APIView):
             return Response({'message': "No query provided"}, status=status.HTTP_400_BAD_REQUEST)
         
 class SearchProductByTitle(APIView):
+
     def get(self, request):
         query = request.query_params.get('q', None)
 
@@ -109,3 +110,16 @@ class SearchProductByTitle(APIView):
             return Response(serializer.data)
         else:
             return Response({'message': "No query provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+class FilterProductsByCategory(APIView):
+    def get(self, request):
+        query = request.query_params.get('category', None)
+
+        if query:
+            products = models.Product.objects.filter(category = query);
+
+            serializer = serializers.ProductSerializer(products, many=True)
+
+            return Response(serializer.data)
+        else:
+            return Response({'message': "No query provided"}, status=status.HTTP_400_BAD_REQUEST) 
